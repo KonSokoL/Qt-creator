@@ -40,7 +40,10 @@ enum CharacterStat{
 
 /// Возможные классы персонажей
 enum CharacterClass{
-    None, NoneG, Tank, Warrior, Mage, Knight, Paladin, Bard, Master, NoneF, WarriorF, MageF
+    None, Tank, TankF,
+    Warrior, WarriorF, Mage, MageF,
+    Knight, KnightF, Paladin, PaladinF,
+    Bard, BardF, Master, MasterF
 };
 
 
@@ -51,6 +54,8 @@ private:
     CharacterClass ch_class = None;
     /// Установка класса персонажа
     void setCharacterClass(CharacterClass);
+    /// Проверка на пол персонажа
+    void setGenderClass(CharacterClass);
 public:
     // Конструктор
     Character(){

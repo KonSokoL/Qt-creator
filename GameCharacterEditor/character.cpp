@@ -8,10 +8,7 @@ void Character::calculateSecondaryCharacterValues(){
 }
 
 void Character::calculateClass(){
-    if (gender == Gender::None)
-    {
-        setCharacterClass(NoneG);
-    }
+
     if(strength >= agility and strength >= intelligence)
     {
         if(agility == intelligence)
@@ -27,26 +24,14 @@ void Character::calculateClass(){
         if(strength == intelligence)
         {
             (float)agility / strength < CLASS_UNION_RATIO ? setCharacterClass(Master) : setCharacterClass(Warrior);
-            if (gender == Gender::Female and ch_class == CharacterClass::Warrior)
-            {
-                setCharacterClass(WarriorF);
-            }
         }
         else if(strength > intelligence)
         {
             (float)agility / strength < CLASS_UNION_RATIO ? setCharacterClass(Knight) : setCharacterClass(Warrior);
-            if (gender == Gender::Female and ch_class == CharacterClass::Warrior)
-            {
-                setCharacterClass(WarriorF);
-            }
         }
         else
         {
             (float)agility / intelligence < CLASS_UNION_RATIO ? setCharacterClass(Bard) : setCharacterClass(Warrior);
-            if (gender == Gender::Female and ch_class == CharacterClass::Warrior)
-            {
-                setCharacterClass(WarriorF);
-            }
         }
 
     }
@@ -55,31 +40,24 @@ void Character::calculateClass(){
         if(strength == agility)
         {
             (float)agility / strength < CLASS_UNION_RATIO ? setCharacterClass(Master) : setCharacterClass(Mage);
-            if (gender == Gender::Female and ch_class == CharacterClass::Mage)
-            {
-                setCharacterClass(MageF);
-            }
         }
         else if(strength > agility)
         {
             (float)intelligence / agility < CLASS_UNION_RATIO ? setCharacterClass(Bard) : setCharacterClass(Mage);
-            if (gender == Gender::Female and ch_class == CharacterClass::Mage)
-            {
-                setCharacterClass(MageF);
-            }
         }
         else
         {
             (float)intelligence / strength < CLASS_UNION_RATIO ? setCharacterClass(Paladin) : setCharacterClass(Mage);
-            if (gender == Gender::Female and ch_class == CharacterClass::Mage)
-            {
-                setCharacterClass(MageF);
-            }
         }
     }
-    if (gender == Gender::Female and ch_class == CharacterClass::Warrior)
+    setGenderClass(ch_class);
+}
+
+void Character::setGenderClass(CharacterClass cc)
+{
+    if (gender == Gender::Female)
     {
-        setCharacterClass(WarriorF);
+        setCharacterClass(CharacterClass(cc + 1));
     }
 }
 

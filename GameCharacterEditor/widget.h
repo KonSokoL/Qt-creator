@@ -16,10 +16,10 @@ class Widget : public QWidget
 
 public:
     /// Словарь с текстовым представлением классов персонажа
-    std::map<CharacterClass, std::string> classMap {{None, "Неизвестный"}, {NoneG, "Не выбран пол"} {Tank, "Танк"}, {Warrior, "Воин"},
-                                                    {Mage, "Волшебник"}, {Knight, "Рыцарь"}, {Paladin, "Паладин"},
-                                                    {Bard, "Бард" }, {Master, "Мастер"}, {NoneF, "Неизвестная"},
-                                                    {WarriorF, "Воительница"}, {MageF, "Волшебница"}};
+    std::map<CharacterClass, std::string> classMap {{None, "Неизвестный"}, {Tank, "Танк"}, {Warrior, "Воин"}, {Mage, "Волшебник"},
+                                                    {Knight, "Рыцарь"}, {Paladin, "Паладин"}, {Bard, "Бард" }, {Master, "Мастер"},
+                                                    {WarriorF, "Воительница"}, {MageF, "Волшебница"}, {TankF, "Танкетка"}, {KnightF, "Рыцаринесса"},
+                                                    {PaladinF, "Паладинесса"}, {BardF, "Бардинесса"}, {MasterF, "Мастеринесса"}};
     /// Переменная персонажа
     Character character;
     /// Функция для обновления информации в UI
