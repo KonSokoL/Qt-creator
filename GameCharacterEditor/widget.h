@@ -16,12 +16,16 @@ class Widget : public QWidget
 
 public:
     /// Словарь с текстовым представлением классов персонажа
-    std::map<CharacterClass, std::string> classMap {{None, "Неизвестный"}, {Tank, "Танк"}, {Warrior, "Воин"}, {Mage, "Волшебник"},
+    std::map<CharacterClass, std::string> classMap {{NoneG, "Выберите пол"}, {Tank, "Танк"}, {Warrior, "Воин"}, {Mage, "Волшебник"},
                                                     {Knight, "Рыцарь"}, {Paladin, "Паладин"}, {Bard, "Бард" }, {Master, "Мастер"},
                                                     {WarriorF, "Воительница"}, {MageF, "Волшебница"}, {TankF, "Танкетка"}, {KnightF, "Рыцаринесса"},
                                                     {PaladinF, "Паладинесса"}, {BardF, "Бардинесса"}, {MasterF, "Мастеринесса"}};
+    /// Словарь с текстовым представлением пола
+    std::map<Gender, std::string> genderMap {{Female, "Женский"}, {Male, "Мужской"}};
     /// Переменная персонажа
     Character character;
+    /// Динамический массив vector для созданных персонажей
+    std::vector<Character> characters;
     /// Функция для обновления информации в UI
     void refreshCharacterInfo();
     /// Функция для изменения показателей
@@ -49,8 +53,12 @@ private:
     void callMessageBox(QString);
     /// Функция для вызова окна с Ошибкой
     void callErrorBox(QString);
+    /// Функция сброса кнопок выбора пола
+    void resetGenderButtons();
     /// Функция для изменения характеристик персонажа
     void changeCharacterStats(CharacterStat cs, Operation op);
+    /// Функция обновления списка созданных персонажей
+    void refreshCharactersList();
     void changeStatLabelColor(QLabel*, int);
     Ui::Widget *ui;
 };

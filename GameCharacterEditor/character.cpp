@@ -59,6 +59,10 @@ void Character::setGenderClass(CharacterClass cc)
     {
         setCharacterClass(CharacterClass(cc + 1));
     }
+    if (gender == Gender::None)
+    {
+        setCharacterClass(NoneG);
+    }
 }
 
 void Character::setCharacterClass(CharacterClass cc)

@@ -22,11 +22,10 @@
 #define CLASS_UNION_RATIO 1.5
 
 /// Пол персонажа
-namespace Gender{
-    enum Gender{
-        None, Male, Female
-    };
-}
+enum Gender{
+    None, Male, Female
+};
+
 
 /// Типа операции с характеристикой персонажа
 enum Operation{
@@ -40,7 +39,7 @@ enum CharacterStat{
 
 /// Возможные классы персонажей
 enum CharacterClass{
-    None, Tank, TankF,
+    NoneG, Tank, TankF,
     Warrior, WarriorF, Mage, MageF,
     Knight, KnightF, Paladin, PaladinF,
     Bard, BardF, Master, MasterF
@@ -51,7 +50,7 @@ enum CharacterClass{
 class Character{
 private:
     /// Переменная класса персонажа
-    CharacterClass ch_class = None;
+    CharacterClass ch_class = NoneG;
     /// Установка класса персонажа
     void setCharacterClass(CharacterClass);
     /// Проверка на пол персонажа
@@ -67,7 +66,7 @@ public:
     /// Имя персонажа
     std::string name;
     /// Пол персонажа
-    Gender::Gender gender = Gender::None;
+    Gender gender = Gender::None;
     // Первичные характеристики
     int strength = 0, agility = 0, intelligence = 0, endurance = 0;
     // Вторичные характеристики
@@ -86,6 +85,7 @@ public:
     void calculateClass();
     /// Геттер класса персонажа
     inline CharacterClass getClass(){return ch_class;}
+    inline Gender getGender(){return gender;}
 };
 
 #endif // CHARACTER_H

@@ -76,6 +76,30 @@ void Widget::changeStatLabelColor(QLabel* lbl, int x)
         lbl->setStyleSheet(colorNice);
 }
 
+void Widget::resetGenderButtons(){
+    ui->maleButton->setAutoExclusive(false);
+    ui->maleButton->setChecked(false);
+    ui->maleButton->setAutoExclusive(true);
+
+    ui->femaleButton->setAutoExclusive(false);
+    ui->femaleButton->setChecked(false);
+    ui->femaleButton->setAutoExclusive(true);
+}
+
+void Widget::refreshCharactersList(){
+    ui->listWidget->clear(); //Очишаем список персонажей перед новым заполнением
+    for(auto it = characters.begin(); it != characters.end(); ++it){
+        std::string pattern = "Имя: ";
+        pattern += it->name;
+        pattern += "\nПол: ";
+        pattern += genderMap.at(it->getGender());
+        pattern += "\nКласс: ";
+        pattern += classMap.at(it->getClass());
+        pattern += "\n";
+        ui->listWidget->addItem(QString(pattern.c_str()));
+    }
+}
+
 void Widget::on_strengthPlusButton_clicked()
 {
     changeCharacterStats(Strength, Increment);
@@ -147,7 +171,13 @@ void Widget::on_createButton_clicked()
         callErrorBox("Не распределены все очки прокачки");
         return;
     }
+    characters.push_back(character); //Добавляем класс персонажа в вектор
     callMessageBox("Персонаж " + QString::fromStdString(character.name) +
                    " класса \"" + classMap.at(character.getClass()).c_str() +
                    "\" успешно создан");
+    character = Character(); //Сбрасываем переменную персонажа
+    ui->nameEdit->clear(); //Очищаем поле имени персонажа
+    resetGenderButtons(); //Сбрасываем кнопки выбора пола
+    refreshCharacterInfo(); //Обновляем информацию о персонаже
+    refreshCharactersList(); //Обновляем список всех персонажей
 }
