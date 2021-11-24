@@ -2,19 +2,19 @@
 #include "ui_widget.h"
 #include <QKeyEvent>
 
-// Объявление макросов цвета
+// Declaring color macros
 #define COLOR_ERROR "color: red;"
 #define COLOR_OK "color: green;"
 
-// Объявление макросов текстов ошибок
-#define DEVIDE_ERROR "Нельзя делить на ноль"
-#define NAN_ERROR "Результат не является числом"
-#define OP_IS_NOT_CHOSEN "Не выбран оператор"
-#define SQRT_ERROR "Нельзя посчитать корень отрицательного числа"
-#define INPUT_ERROR "Неверный ввод чисел"
-#define OP1_IS_EMPTY "Введите " + ui->element1Label->text()
-#define OP2_IS_EMPTY "Введите " + ui->element2Lable->text()
-#define OP_BOTH_ARE_EMPTY "Введите " + ui->element1Label->text() + " и " + ui->element2Lable->text()
+// Declaring error text macros
+#define DEVIDE_ERROR "Cannot be divided by zero"
+#define NAN_ERROR "Result is not a number"
+#define OP_IS_NOT_CHOSEN "No operator selected"
+#define SQRT_ERROR "The square root of a negative number cannot be calculated."
+#define INPUT_ERROR "Invalid number entry"
+#define OP1_IS_EMPTY "Entry " + ui->element1Label->text()
+#define OP2_IS_EMPTY "Entry " + ui->element2Lable->text()
+#define OP_BOTH_ARE_EMPTY "Entry " + ui->element1Label->text() + " and " + ui->element2Lable->text()
 
 
 
@@ -24,14 +24,14 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Установка размера окна
+    // Setting fixed size for a window
     this->setFixedSize(727, 212);
 
-    // Установка названия окна
-    this->setWindowTitle("Калькулятор");
+    // Setting title of a window
+    this->setWindowTitle("Calculator");
 
-    // Установка параметров окна ошибки
-    errorBox.setWindowTitle("Ошибка!");
+    // Setting parameters of error window
+    errorBox.setWindowTitle("Error!");
     errorBox.setStandardButtons(QMessageBox::Ok);
 }
 
@@ -42,16 +42,16 @@ Widget::~Widget()
 
 void Widget::keyPressEvent(QKeyEvent *event){
 
-    // Задействование кнопки Return для работы кнопки "Посчитать"
+    // Using the Return Button to Work the Calculate Button
     if(event->key() == Qt::Key_Return){
         Widget::on_summbitBtn_clicked();
     }
 
-    // Задействование кнопки Escape для закрытия программы
+    // Using the Escape button to close the program
     if(event->key() == Qt::Key_Escape){
         this->close();
     }
-    // Задействование кнопок "+", "-", "*", "/", "s" для выбора оператора
+    // Using the "+", "-", "*", "/", "s" buttons to select an operator
     if(event->key() == Qt::Key_Plus){
         ui->plusRBtn->setChecked(true);
     }
@@ -71,14 +71,14 @@ void Widget::keyPressEvent(QKeyEvent *event){
 
 void Widget::readOperands()
 {
-    /// Логическая переменная для проверки валидности ввода
+    /// Boolean variable for checking input validity
     bool ok = false;
     hasError = NoError;
     operand1IsEmpty = false;
     operand2IsEmpty = false;
-    // Присваивание числа из поля ввода 1-го операнда
+    // Assigning a number from the input field of the 1st operand
     operand1 = ui->operand1->text().toDouble(&ok);
-    // Проверка валидности ввода операнда 1
+    // Checking the validity of the input of the 1st operand
     if (!setStyleInput(ui->operand1, ok))
     {
         if (ui->operand1->text().isEmpty())
@@ -90,9 +90,9 @@ void Widget::readOperands()
             hasError = InputError;
         }
     }
-    // Присваивание числа из поля ввода 1-го операнда
+    // Assigning a number from the input field of the 2nd operand
     operand2 = ui->operand2->text().toDouble(&ok);
-    // Проверка валидности ввода операнда 1
+    // Checking the validity of the input of the 2nd operand
     if (!setStyleInput(ui->operand2, ok))
     {
         if (ui->operand2->text().isEmpty())
@@ -116,8 +116,9 @@ void Widget::calculate()
     checkEmpty();
 
     /*
-     * Рассчёт будет проходить только при
-     * условии того, что не будет ошибок ввода
+     * The calculation will take place only 
+     * on the condition that there are 
+     * no input errors
      */
     if (hasError == NoError)
     {
@@ -133,7 +134,7 @@ void Widget::calculate()
                 result = operand1 * operand2;
                 break;
             case Devide:
-                // Проверка деления на ноль
+                // Division by zero check
                 if (operand2 == 0)
                 {
                     hasError = DevideError;
@@ -146,8 +147,8 @@ void Widget::calculate()
                 }
             case Sqrt:
                 /*
-                 * Проверка отрицательности
-                 * подкоренного числа
+                 * Checking the negativeness 
+                 * of a radical number
                  */
                 if (operand2 < 0)
                 {
@@ -160,7 +161,7 @@ void Widget::calculate()
                     break;
                 }
         }
-        // Проверка на бесконечность и "не число"
+        // Checking for infinity and "not a number"
         if (result == INFINITY or result == NAN)
         {
             hasError = NANError;
@@ -172,7 +173,7 @@ void Widget::calculate()
         return errorOutput();
     }
 
-    // Вывод результата в resultLine
+    // Outputting the result to resultLine
     ui->resultLine->setText(QString::number(result));
 }
 
@@ -184,28 +185,28 @@ void Widget::refreshStyle()
     switch (Operation)
     {
         case Plus:
-            ui->element1Label->setText("Слагаемое 1");
-            ui->element2Lable->setText("Слагаемое 2");
-            ui->resultLable->setText("Сумма");
+            ui->element1Label->setText("Addend 1");
+            ui->element2Lable->setText("Addend 2");
+            ui->resultLable->setText("Sum");
             break;
         case Minus:
-            ui->element1Label->setText("Уменьшаемое");
-            ui->element2Lable->setText("Вычиатемое");
-            ui->resultLable->setText("Разность");
+            ui->element1Label->setText("Minuend");
+            ui->element2Lable->setText("Subtrahend");
+            ui->resultLable->setText("Difference");
             break;
         case Multiply:
-            ui->element1Label->setText("Множитель 1");
-            ui->element2Lable->setText("Множитель 2");
-            ui->resultLable->setText("Произведение");
+            ui->element1Label->setText("Multiplicanda");
+            ui->element2Lable->setText("Multiplier");
+            ui->resultLable->setText("Product");
             break;
         case Devide:
-            ui->element1Label->setText("Делимое");
-            ui->element2Lable->setText("Делитель");
-            ui->resultLable->setText("Частное");
+            ui->element1Label->setText("Dividend");
+            ui->element2Lable->setText("Divisor");
+            ui->resultLable->setText("Quotient");
             break;
         case Sqrt:
-            ui->element2Lable->setText("Подкоренное число");
-            ui->resultLable->setText("Результат");
+            ui->element2Lable->setText("Radical number");
+            ui->resultLable->setText("Result");
             ui->operand1->hide();
             ui->element1Label->hide();
             break;
