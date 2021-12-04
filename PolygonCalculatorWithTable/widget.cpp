@@ -27,12 +27,12 @@ void Widget::addPoint()
                     ui->pointTable->setItem(ui->pointTable->rowCount()-1, 0, item);
                 }
     Point *point = new Point;
-    points.insert({item, point});
-    ui->pointTable->setItem(ui->pointTable->rowCount()-1, 1, new QTableWidgetItem(points.at(item)->x));
-    ui->pointTable->setItem(ui->pointTable->rowCount()-1, 2, new QTableWidgetItem(points.at(item)->y));
+    points.push_back(point);
+    ui->pointTable->setItem(ui->pointTable->rowCount()-1, 1, new QTableWidgetItem(points.at(ui->pointTable->rowCount()-1)->x));
+    ui->pointTable->setItem(ui->pointTable->rowCount()-1, 2, new QTableWidgetItem(points.at(ui->pointTable->rowCount()-1)->y));
     item->setText(POINT_NAME + QString::number(ui->pointTable->rowCount()));
-    ui->pointTable->item(ui->pointTable->rowCount()-1, 1)->setText(QString::number(points.at(item)->x));
-    ui->pointTable->item(ui->pointTable->rowCount()-1, 2)->setText(QString::number(points.at(item)->y));
+    ui->pointTable->item(ui->pointTable->rowCount()-1, 1)->setText(QString::number(points.at(ui->pointTable->rowCount()-1)->x));
+    ui->pointTable->item(ui->pointTable->rowCount()-1, 2)->setText(QString::number(points.at(ui->pointTable->rowCount()-1)->y));
 }
 
 double Widget::dabs(double x)
@@ -49,7 +49,7 @@ std::vector<Point> Widget::getVectorPoints()
     std::vector<Point> v_points;
     for(int i = 0; i < ui->pointTable->rowCount(); i++)
     {
-        v_points.push_back(*points.at(ui->pointTable->item(i, 0)));
+        v_points.push_back(*points.at(i));
     }
     return v_points;
 }
@@ -129,14 +129,15 @@ void Widget::calculateAll()
                                                                      (s == 0 ? "Вырожденный многоугольник" :
                                                                                QString::number(s, 'f', 2))));
     ui->perimeterEdit->setText(ui->pointTable->rowCount() < 3 ? "Многоугольника": QString::number(p, 'f', 2));
+
 }
 
 double Widget::calculatePerimeter()
 {
     double p = 0;
-    for(auto it = points.begin(); it != points.end(); ++it)
+    for(int i = 0; i != ui->pointTable->rowCount(); ++i)
     {
-        p += it->second->side;
+        p += points.at(i)->side;
     }
     return p;
 }
@@ -144,14 +145,16 @@ double Widget::calculatePerimeter()
 void Widget::calculatePolygonSides()
 {
     if(points.size() <= 1) return;
-    auto it = points.begin();
-    auto end = --points.end();
-    end->second->side = sqrt(pow(it->second->x-end->second->x, 2) + pow(it->second->y-end->second->y, 2));
-    while(it != end)
+    points.at(ui->pointTable->rowCount()-1)->side = sqrt(pow(points.at(0)->x-points.at(ui->pointTable->rowCount()-1)->x, 2) + pow(points.at(0)->y-points.at(ui->pointTable->rowCount()-1)->y, 2));
+    int i = 0;
+    while(i != ui->pointTable->rowCount()-1)
     {
-        auto p1 = it->second;
-        auto p2 = (++it)->second;
-        p1->side = sqrt(pow(p2->x-p1->x, 2) + pow(p2->y-p1->y, 2));
+        int x1 = points.at(i)->x;
+        int x2 = points.at(i+1)->x;
+        int y1 = points.at(i)->y;
+        int y2 = points.at(i+1)->y;
+        points.at(i)->side = sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
+        i++;
     }
 }
 
@@ -163,16 +166,15 @@ double Widget::calculatePolygonSquare(bool *crossed = nullptr)
     }
     *crossed = hasCross(getVectorPoints());
     double part1 = 0, part2 = 0;
-    auto it = points.begin();
-    auto end = --points.end();
-    part1 += end->second->x * it->second->y;
-    part2 += end->second->y * it->second->x;
-    while(it != end)
+    int i = 0;
+    part1 += points.at(points.size()-1)->x * points.at(0)->y;
+    part2 += points.at(points.size()-1)->y * points.at(0)->x;
+    while (i < ui->pointTable->rowCount()-1)
     {
-        int x1 = it->second->x, y1 = it->second->y;
-        ++it;
-        part1+=x1*it->second->y;
-        part2+=y1*it->second->x;
+        int x1 = points.at(i)->x, y1 = points.at(i)->y;
+        ++i;
+        part1+=x1*points.at(i)->y;
+        part2+=y1*points.at(i)->x;
     }
     return dabs((part1-part2)/2);
 }
@@ -185,9 +187,9 @@ bool Widget::checkEditInput(QLineEdit* input, bool ok)
 
 void Widget::refreshCoordinates()
 {
-    QTableWidgetItem *item = ui->pointTable->item(ui->pointTable->currentRow(), 0);
-    ui->pointTable->item(ui->pointTable->currentRow(), 1)->setText(QString::number(points.at(item)->x));
-    ui->pointTable->item(ui->pointTable->currentRow(), 2)->setText(QString::number(points.at(item)->y));
+    int index = ui->pointTable->currentRow();
+    ui->pointTable->item(ui->pointTable->currentRow(), 1)->setText(QString::number(points.at(index)->x));
+    ui->pointTable->item(ui->pointTable->currentRow(), 2)->setText(QString::number(points.at(index)->y));
 }
 
 void Widget::on_addPointBtn_clicked()
@@ -205,7 +207,7 @@ void Widget::on_removePointBtn_clicked()
         return;
     }
     QTableWidgetItem *item = ui->pointTable->takeItem(ui->pointTable->rowCount()-1, 0);
-    points.erase(item);
+    points.pop_back();
     delete item;
     ui->pointTable->removeRow(ui->pointTable->rowCount()-1);
     calculateAll();
@@ -222,7 +224,7 @@ void Widget::on_xEdit_textChanged(const QString &arg1)
     if (checkEditInput(ui->xEdit, ok))
     {
         ui->pointTable->selectedItems()[0]->setForeground(Qt::white);
-        points.at(ui->pointTable->selectedItems()[0])->x = ok ? x : 0;
+        points.at(ui->pointTable->currentRow())->x = ok ? x : 0;
         calculateAll();
     }
     refreshCoordinates();
@@ -239,7 +241,7 @@ void Widget::on_yEdit_textChanged(const QString &arg1)
     int x = arg1.toInt(&ok);
     if (checkEditInput(ui->yEdit, ok))
     {
-        points.at(ui->pointTable->selectedItems()[0])->y = ok ? x : 0;
+        points.at(ui->pointTable->currentRow())->y = ok ? x : 0;
         calculateAll();
     }
     refreshCoordinates();
@@ -248,8 +250,10 @@ void Widget::on_yEdit_textChanged(const QString &arg1)
 
 void Widget::on_pointTable_itemSelectionChanged()
 {
-    ui->xEdit->setText(QString::number(points.at(ui->pointTable->item(ui->pointTable->currentRow(), 0))->x));
-    ui->yEdit->setText(QString::number(points.at(ui->pointTable->item(ui->pointTable->currentRow(), 0))->y));
-    calculateAll();
+    if (ui->pointTable->currentItem() != nullptr){
+        ui->xEdit->setText(QString::number(points.at(ui->pointTable->currentRow())->x));
+        ui->yEdit->setText(QString::number(points.at(ui->pointTable->currentRow())->y));
+        calculateAll();
+    }
 }
 

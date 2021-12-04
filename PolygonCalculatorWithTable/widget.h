@@ -21,7 +21,7 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    std::map<QTableWidgetItem*, Point*> points;
+    std::vector<Point*> points;
     /// Функция добавления новой точки
     void addPoint();
     /// Расчёт модуля для вещественного числа
