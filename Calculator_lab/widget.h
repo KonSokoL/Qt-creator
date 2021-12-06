@@ -16,14 +16,14 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    /// Окно ошибок
+    /// Error window
     QMessageBox errorBox;
 
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
 protected:
-    /// Обработчик событий для работы с клавиатурой
+    /// Event handler for working with the keyboard
     void keyPressEvent(QKeyEvent *event);
 
 private slots:
@@ -44,33 +44,33 @@ private slots:
     void on_operand2_textChanged();
 
 private:
-    // Объявление переменных операндов 1, 2 и результата
+    // Declaring variable operands 1, 2 and result
     double operand1 = 0, operand2 = 0, result = 0;
-    /// Переменная ошибки
+    /// Error variable
     int hasError = NoError;
-    /// Переменная операции
+    /// Operation variable
     int Operation = None;
-    // Логические переменные для проверки пустоты полей ввода
+    // Boolean variables for checking if input fields are empty
     bool operand1IsEmpty = false, operand2IsEmpty = false;
-    /// Перечисление ошибок
+    /// Enumeration of errors
     enum Errors {NoError, Op1Empty, Op2Empty,
                  OpBothEmpty, InputError, DevideError,
                  SqrtError, NANError, OpIsNotChosen};
-    /// Перечисление операций
+    /// Enumeration of operations
     enum Operations {None, Plus, Minus, Multiply, Devide, Sqrt};
-    /// Функция чтения и проверки значений
+    /// Function for reading and checking values
     void readOperands();
-    /// Функция рассчёта выражения
+    /// Calculate function
     void calculate();
-    /// Функция выбора и вывода ошибки
+    /// Error selection and output function
     void errorOutput();
-    /// Функция проверки пустоты
+    /// Empty check function
     void checkEmpty();
-    /// Функция изменения цвета строки ввода в зависимости от валидности ввода
+    /// Function for changing the color of the input line depending on the validity of the input
     bool setStyleInput(QLineEdit *, bool);
-    /// Показ окна ошибки
+    /// Error window display function
     void errorBoxShow(QString);
-    /// Функция обновления стиля окна
+    /// Window style update function
     void refreshStyle();
 
     Ui::Widget *ui;
